@@ -11,6 +11,7 @@ requires 'YAML';
 requires 'Mojolicious::Lite';
 requires 'Proc::Simple';
 requires 'Guard';
+requires 'Time::Piece';
 
 on 'test' => sub {
     requires 'Test::More', '0.98';
