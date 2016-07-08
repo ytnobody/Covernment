@@ -1,0 +1,6 @@
+name = "Covernment"
+# badges = ["travis"]
+authority="cpan:YTURTLE"
+
+module_maker="ModuleBuildTiny"
+
