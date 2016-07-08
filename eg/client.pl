@@ -10,5 +10,6 @@ use Data::Dumper;
 
 $Covernment::Client::CLEANUP = 1;
 
-my $req = Covernment::Client->create_request(File::Spec->catfile(dirname(__FILE__), qw/.. cover_db/));
-warn Dumper($req);
+Covernment::Client->upload_project(
+    File::Spec->catfile(dirname(__FILE__), qw/../)
+);

@@ -1,36 +1,72 @@
 package Covernment::Client;
 use strict;
 use warnings;
-use Archive::Tar;
 use HTTP::Request::Common;
 use URI;
 use LWP::UserAgent;
 use Carp;
-
-our $AGENT_URL        = $ENV{'COVERNMENT_URL'} || 'http://127.0.0.1:9210';
-our $ARCHIVE_FILENAME = 'cover_db.tar.gz';
-our $CLEANUP          = 0;
+use Git::Wrapper;
+use YAML;
 
 our $AGENT = LWP::UserAgent->new(agent => __PACKAGE__, timeout => 300);
+our $CONFIG;
+our $GITINFO;
 
-sub upload_cover_db {
+sub config {
+    $CONFIG ||= YAML::LoadFile('.covernment.yml');
+    $CONFIG;
+}
+
+sub upload_project {
     my ($class, $path) = @_;
     my $req = $class->create_request($path);
-    my $res = $AGENT->req($req);
+    my $res = $AGENT->request($req);
     if (!$res->is_success) {
         croak $res->status_line;
     }
     $res;
 }
 
+sub git_info {
+    my ($class) = @_;
+    if (!$GITINFO) {
+        my $git = Git::Wrapper->new('.');
+        my ($branch) = grep {/^\* /} $git->branch;
+        $branch =~ s/^\* //;
+        my ($head) = $git->log;
+        $GITINFO = { branch => $branch, commit => $head->id };
+    }
+    $GITINFO;
+}
+
+sub archive_filename {
+    my $class = shift;
+    sprintf "%s-%s-%s.tar.gz", $class->config->{name}, $class->git_info->{branch}, $class->git_info->{commit};
+}
+
+sub agent_url {
+    my $class = shift;
+    $class->config->{agent_url} || 'http://127.0.0.1:9210';
+}
+
 sub create_request {
     my ($class, $path) = @_;
-    Archive::Tar->create_archive($ARCHIVE_FILENAME, COMPRESS_GZIP, $path);
 
-    my $url = URI->new($AGENT_URL);
+    my $archive = $class->archive_filename;
+    `tar czvf $archive ./`;
+
+    my $git_info = $class->git_info($path);
+
+    my $url = URI->new($class->agent_url);
     $url->path('/api/v1/upload');
-    my $req = POST $url->as_string, Content_Type => 'form-data', Content => [file => [$ARCHIVE_FILENAME]];
-    unlink $ARCHIVE_FILENAME if $CLEANUP;
+
+    my $req = POST(
+        $url->as_string, 
+        Content_Type => 'form-data', 
+        Content      => [ file => [$archive], name => $class->config->{name}, %$git_info ]
+    );
+
+    unlink $archive;
     return $req;
 }
 
