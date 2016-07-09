@@ -1,0 +1,7 @@
+--lib
+--color
+--failures
+--recurse
+--timer
+--trap
+--exec "perl -Ilib -MDevel::Cover=+ignore=.*,+select,^lib"
