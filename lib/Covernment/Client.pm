@@ -7,6 +7,7 @@ use LWP::UserAgent;
 use Carp;
 use Git::Wrapper;
 use YAML;
+use File::Temp 'tempdir';
 
 our $AGENT = LWP::UserAgent->new(agent => __PACKAGE__, timeout => 300);
 our $CONFIG;
@@ -52,7 +53,9 @@ sub agent_url {
 sub create_request {
     my ($class, $path) = @_;
 
-    my $archive = $class->archive_filename;
+    my $tempdir = tempdir(CLEANUP => 1);
+    my $archive = File::Spec->catfile($tempdir, $class->archive_filename);
+
     `tar czvf $archive ./`;
 
     my $git_info = $class->git_info($path);
@@ -66,7 +69,6 @@ sub create_request {
         Content      => [ file => [$archive], name => $class->config->{name}, %$git_info ]
     );
 
-    unlink $archive;
     return $req;
 }
 
