@@ -13,9 +13,10 @@ if (! -d $WORKDIR) {
     mkdir $WORKDIR or die "Could not create directory $WORKDIR : $!";
 }
 
+### redirect to dashboard
 get '/' => sub {
     my $c = shift;
-    $c->render(json => {foo => 'bar'});
+    $c->redirect_to('/dashboard/');
 };
 
 ### entrypoint for covernment client
@@ -87,6 +88,7 @@ sub go {
     my $class = shift;
     builder {
         enable "Static", path => qr{^/project/.+?/.+?/.+?/cover_db/}, root => $WORKDIR;
+        enable "Static", path => qr{^/dashboard/}, root => 'htdocs';
         app->start;
     };
 }
