@@ -12,6 +12,7 @@ requires 'Mojolicious::Lite';
 requires 'Proc::Simple';
 requires 'Guard';
 requires 'Time::Piece';
+requires 'Devel::Cover::Report::Html';
 
 on 'test' => sub {
     requires 'Test::More', '0.98';
