@@ -15,7 +15,7 @@ function loadBranches (projectName) {
             $('.branches').append(p);
 
             var th = $('<tr><th>Commit</th><th>Date</th></tr>');
-            $('.commits').append(th);
+            $('.commits.' + branch).append(th);
             loadCommits(projectName, branch);
         });
     });
