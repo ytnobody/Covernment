@@ -1,9 +1,24 @@
-$(document).ready(
-    function () {
-        console.log($.deserialize(window.location.search));
-    }
-);
+$(document).ready(function () { 
+    loadProjects();
+    var action = location.paramObject.action ? location.paramObject.action : 'default';
+    var actionMethod = new Function('return action_' + action + '()');
+    actionMethod();
+});
 
-function changeContents (url) {
-    $('#contents').val('src', url);
+function loadProjects () {
+    $.get('/api/v1/projects', function(json){
+        $.each(json.projects, function(i, project) {
+            var p = $('<li><a href="/dashboard/index.html?action=branches&project='+ project +'">'+ project +'</a></li>');
+            $('ul#projects').append(p);
+        });
+    });
+}
+
+function action_default () {
+
+}
+
+function action_branches () {
+    var project = location.paramObject.project;
+    document.contents.location.href = '/dashboard/branches.html?project=' + project; 
 }
