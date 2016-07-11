@@ -14,15 +14,21 @@ __END__
 
 =head1 NAME
 
-Covernment - It's new $module
+Covernment - Devel::Cover::Reporter::Html as a Service
 
 =head1 SYNOPSIS
 
-    use Covernment;
+Run a server.
+
+    $ plackup ./app.psgi -p 9210
+
+Then, Run covernment client under your git repository.
+
+    $ ./covernment MyProjectName http://yourhostname:9210
 
 =head1 DESCRIPTION
 
-Covernment is ...
+Covernment is a Service of Devel::Cover::Reporter::Html.
 
 =head1 LICENSE
 

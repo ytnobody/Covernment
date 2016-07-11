@@ -1,0 +1,14 @@
+#!/bin/bash
+
+NAME=$1
+URL=$2
+ENDPOINT=$URL/api/v1/upload
+DATAFILE=/tmp/$(date +"$NAME-%Y%m%d%H%M%S.tar.gz")
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+COMMIT=$(git rev-parse HEAD)
+
+tar czvf $DATAFILE ./
+
+curl -XPOST -F name=$NAME -F branch=$BRANCH -F commit=$COMMIT -F file=@$DATAFILE $ENDPOINT 
+
+rm -f $DATAFILE

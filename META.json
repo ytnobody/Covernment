@@ -1,10 +1,10 @@
 {
-   "abstract" : "It's new $module",
+   "abstract" : "Devel::Cover::Reporter::Html as a Service",
    "author" : [
       "ytnobody <ytnobody@gmail.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v3.0.0, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "Minilla/v2.4.1, CPAN::Meta::Converter version 2.150001",
    "license" : [
       "perl_5"
    ],
@@ -42,6 +42,21 @@
       },
       "runtime" : {
          "requires" : {
+            "Archive::Tar" : "0",
+            "Carp" : "0",
+            "Devel::Cover::Report::Html" : "0",
+            "File::Basename" : "0",
+            "File::Spec" : "0",
+            "File::Temp" : "0",
+            "Git::Wrapper" : "0",
+            "Guard" : "0",
+            "HTTP::Request::Common" : "0",
+            "LWP::UserAgent" : "0",
+            "Mojolicious::Lite" : "0",
+            "Proc::Simple" : "0",
+            "Time::Piece" : "0",
+            "URI" : "0",
+            "YAML" : "0",
             "perl" : "5.008001"
          }
       },
@@ -52,6 +67,17 @@
       }
    },
    "release_status" : "unstable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/ytnobody/Covernment/issues"
+      },
+      "homepage" : "https://github.com/ytnobody/Covernment",
+      "repository" : {
+         "type" : "git",
+         "url" : "git://github.com/ytnobody/Covernment.git",
+         "web" : "https://github.com/ytnobody/Covernment"
+      }
+   },
    "version" : "0.01",
    "x_authority" : "cpan:YTURTLE"
 }

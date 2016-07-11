@@ -1,14 +1,20 @@
 # NAME
 
-Covernment - It's new $module
+Covernment - Devel::Cover::Reporter::Html as a Service
 
 # SYNOPSIS
 
-    use Covernment;
+Run a server.
+
+    $ plackup ./app.psgi -p 9210
+
+Then, Run covernment client under your git repository.
+
+    $ ./covernment MyProjectName http://yourhostname:9210
 
 # DESCRIPTION
 
-Covernment is ...
+Covernment is a Service of Devel::Cover::Reporter::Html.
 
 # LICENSE
 
