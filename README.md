@@ -10,7 +10,8 @@ Run a server.
 
 Then, Run covernment client under your git repository.
 
-    $ ./covernment MyProjectName http://yourhostname:9210
+    $ curl -L https://is.gd/covernment > covernment
+    $ bash ./covernment MyProjectName http://yourhostname:9210
 
 # DESCRIPTION
 
