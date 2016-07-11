@@ -69,7 +69,13 @@ get '/api/v1/project/:project/:branch/commits' => sub {
     my $c = shift;
     my $project = $c->stash('project');
     my $branch  = $c->stash('branch');
+    my $rows    = $c->param('rows') || 10; 
     my @commits = 
+        map {
+            my $path = sprintf "%s/project/%s/%s/%s/cover_db/coverage.html", $WORKDIR, $project, $branch, $_;
+            my @stat = stat $path;
+            {id => $_, date => localtime($stat[9])->strftime('%Y-%m-%d %H:%M:%S')};
+        }
         map {s|^$WORKDIR/project/$project/$branch/*||r} 
         sort {
             my ($rev_a) = Git::Wrapper->new($a)->log;
@@ -80,7 +86,29 @@ get '/api/v1/project/:project/:branch/commits' => sub {
         } 
         glob "$WORKDIR/project/$project/$branch/*"
     ; 
-    $c->render(json => {commits => [@commits]});
+    $c->render(json => {commits => [grep {defined $_} @commits[0 .. $rows-1]]});
+};
+
+### time sorted commit list
+get '/api/v1/commits' => sub {
+    my $c = shift;
+    my $rows = $c->param('rows') || 100;
+    my @commits =
+    map {
+        my $path = sprintf "%s/project/%s/%s/%s/cover_db/coverage.html", $WORKDIR, $_->{project}, $_->{branch}, $_->{commit};
+        my @stat = stat $path;
+        $_->{date} = localtime($stat[9])->strftime('%Y-%m-%d %H:%M:%S');;
+        $_;
+    }
+    map {my @item = split '/', $_; {project => $item[0], branch => $item[1], commit => $item[2]}}
+    map {s|^$WORKDIR/project/||r}   
+    sort {
+        my @stat_a = stat $a;
+        my @stat_b = stat $b;
+        $stat_b[9] <=> $stat_a[9]; ### 作成日時(mtime)で比較
+    } 
+    glob "$WORKDIR/project/*/*/*";
+    $c->render(json => {commits => [grep {defined $_} @commits[0 .. $rows-1]]});
 };
 
 ### application

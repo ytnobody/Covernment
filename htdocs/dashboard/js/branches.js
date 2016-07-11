@@ -11,8 +11,11 @@ function setProjectName (projectName) {
 function loadBranches (projectName) {
     $.get('/api/v1/project/' + projectName + '/branches', function(json){
         $.each(json.branches, function(i, branch) {
-            var p = '<h2>'+ branch +'</h2><ul class="'+ branch +' commits"></ul>';
+            var p = '<h2>'+ branch +'</h2><table class="table table-bordered '+ branch +' commits"></table>';
             $('.branches').append(p);
+
+            var th = $('<tr><th>Commit</th><th>Date</th></tr>');
+            $('.commits').append(th);
             loadCommits(projectName, branch);
         });
     });
@@ -21,7 +24,9 @@ function loadBranches (projectName) {
 function loadCommits (project, branch) {
     $.get('/api/v1/project/' + project + '/' + branch + '/commits', function(json){
         $.each(json.commits, function(i, commit) {
-            var p = '<li><a href="/project/'+ project +'/'+ branch +'/'+ commit +'/cover_db/coverage.html">'+ commit +'</a></li>';
+            var p = $('<tr></tr>');
+            p.append('<td><a href="/project/'+ project +'/'+ branch +'/'+ commit.id +'/cover_db/coverage.html">'+ commit.id +'</a></td>');
+            p.append('<td>'+ commit.date +'</td>');
             $('.commits.' + branch).append(p);
         });
     });

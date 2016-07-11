@@ -15,7 +15,7 @@ function loadProjects () {
 }
 
 function action_default () {
-
+    document.contents.location.href = '/dashboard/commits.html'; 
 }
 
 function action_branches () {
